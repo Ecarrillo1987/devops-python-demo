@@ -64,35 +64,41 @@ jobs:
     steps:
       - name: 📥 Checkout del código
         uses: actions/checkout@v2
-      
+
       - name: 🔐 Autenticarse en Google Cloud
         run: |
           echo "${{ secrets.GCLOUD_SERVICE_KEY }}" | base64 --decode > gcloud-key.json
           gcloud auth activate-service-account --key-file=gcloud-key.json
           gcloud config set project balmy-apogee-304919
           gcloud container clusters get-credentials devops-cluster --region=us-east1
-      
+
       - name: 🛠️ Instalar Plugin de Autenticación GKE
         run: |
-            echo "📥 Descargando Google Cloud SDK..."
-            curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-451.0.0-linux-x86_64.tar.gz
-            tar -xzf google-cloud-sdk-451.0.0-linux-x86_64.tar.gz
-            ./google-cloud-sdk/install.sh -q
-            echo "✅ Google Cloud SDK instalado correctamente."
+          echo "📦 Instalando Plugin de Autenticación GKE..."
+          gcloud components install gke-gcloud-auth-plugin -q
+          echo "✅ Instalación completada."
 
-            echo "📦 Instalando Plugin de Autenticación GKE..."
-            ./google-cloud-sdk/bin/gcloud components install gke-gcloud-auth-plugin -q
-            echo "export PATH=$(pwd)/google-cloud-sdk/bin:$PATH" >> $HOME/.bashrc
-            echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $HOME/.bashrc
-            source $HOME/.bashrc
-
-      - name: 🔧 Configurar `kubectl`
+      - name: 🔧 Configurar `kubectl` correctamente
         run: |
-         mkdir -p $HOME/.kube
-         echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config 
-         export KUBECONFIG=$HOME/.kube/config
-         kubectl config current-context
-         kubectl cluster-info
+          echo "📌 Configurando variables para usar el plugin GKE"
+          echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $HOME/.bashrc
+          echo "export PATH=$(pwd)/google-cloud-sdk/bin:$PATH" >> $HOME/.bashrc
+          source $HOME/.bashrc
+          echo "✅ Configuración completada."
+
+      - name: 🚀 Verificar `kubectl`
+        run: |
+          echo "🔍 Verificando `kubectl` y el plugin de autenticación..."
+          which gke-gcloud-auth-plugin || echo "❌ El plugin no se encontró en el PATH"
+          kubectl version --client
+          echo "✅ `kubectl` está listo."
+
+      - name: 🚀 Desplegar en Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl get pods
+          kubectl get services
 
       - name: 🚀 Desplegar en Kubernetes
         run: |
