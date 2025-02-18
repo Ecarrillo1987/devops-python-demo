@@ -74,9 +74,13 @@ jobs:
       
       - name: 🛠️ Instalar Plugin de Autenticación GKE
         run: |
-            sudo apt-get update && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-            echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
-            source ~/.bashrc
+            curl -O https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk.tar.gz
+            tar -xf google-cloud-sdk.tar.gz
+            ./google-cloud-sdk/install.sh -q
+            ./google-cloud-sdk/bin/gcloud components install gke-gcloud-auth-plugin -q
+            echo "export PATH=$(pwd)/google-cloud-sdk/bin:$PATH" >> $HOME/.bashrc
+            echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $HOME/.bashrc
+            source $HOME/.bashrc
 
       - name: 🔧 Configurar `kubectl`
         run: |
