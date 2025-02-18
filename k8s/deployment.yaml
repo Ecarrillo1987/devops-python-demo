@@ -23,3 +23,7 @@ spec:
                 secretKeyRef:
                   name: django-secret
                   key: DJANGO_SECRET_KEY
+            - name: DATABASE_NAME
+              value: "db.sqlite3"
+            - name: ALLOWED_HOSTS
+              value: "localhost,127.0.0.1"
