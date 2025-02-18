@@ -67,8 +67,9 @@ jobs:
 
       - name: 🔧 Configurar `kubectl`
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
+         echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config 
+         export KUBECONFIG=$HOME/.kube/config
+         kubectl config get-contexts
 
       - name: 🚀 Desplegar en Kubernetes
         run: |
