@@ -1,9 +1,6 @@
-from django.db import models
+from django.apps import AppConfig
 
 
-class User(models.Model):
-    dni = models.CharField(max_length=13, unique=True)
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.name
+class ApiConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "api"
