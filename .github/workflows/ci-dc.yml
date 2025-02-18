@@ -74,10 +74,9 @@ jobs:
       
       - name: 🛠️ Instalar Plugin de Autenticación GKE
         run: |
-            echo "Installing GKE authentication plugin..."
-            export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-            gcloud components list
-            gcloud auth configure-docker
+            sudo apt-get update && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+            echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
+            source ~/.bashrc
 
       - name: 🔧 Configurar `kubectl`
         run: |
