@@ -74,7 +74,7 @@ jobs:
       
       - name: 🛠️ Instalar Plugin de Autenticación GKE
         run: |
-            gcloud components install gke-gcloud-auth-plugin
+            sudo apt-get update && sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
             export USE_GKE_GCLOUD_AUTH_PLUGIN=True    
 
       - name: 🔧 Configurar `kubectl`
@@ -83,7 +83,7 @@ jobs:
          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config 
          export KUBECONFIG=$HOME/.kube/config
          kubectl config current-context
-         kubectl config get-contexts
+         kubectl cluster-info
 
       - name: 🚀 Desplegar en Kubernetes
         run: |
