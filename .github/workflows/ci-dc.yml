@@ -48,13 +48,13 @@ jobs:
 
       - name: 🛠️ Construir y etiquetar imagen Docker
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/devops-python-demo:v1 .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/devops-python-demo:v1 ${{ secrets.DOCKER_USERNAME }}/devops-python-demo:latest
+          docker build -t chancho1987/devops-demo:v1 .
+          docker tag chancho1987/devops-demo:v1 chancho1987/devops-demo:latest
 
       - name: 🚀 Subir imagen a Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/devops-python-demo:v1
-          docker push ${{ secrets.DOCKER_USERNAME }}/devops-python-demo:latest
+          docker push chancho1987/devops-demo:v1
+          docker push chancho1987/devops-demo:latest
 
   deploy-k8s:
     needs: docker-build-push
