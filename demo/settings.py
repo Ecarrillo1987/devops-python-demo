@@ -13,10 +13,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='fallbacksecretkey')
 
 # Configurar si es modo debug o no
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = env.bool('DEBUG', default=False)
 
 # Configurar hosts permitidos
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '*'])
 
 # Configuración de aplicaciones Django
 DJANGO_APPS = [
@@ -103,6 +103,7 @@ USE_TZ = True
 
 # Archivos estáticos
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Configuración de ID de clave primaria
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
