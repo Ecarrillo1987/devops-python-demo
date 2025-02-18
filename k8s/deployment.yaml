@@ -26,4 +26,4 @@ spec:
             - name: DATABASE_NAME
               value: "db.sqlite3"
             - name: ALLOWED_HOSTS
-              value: "localhost,127.0.0.1"
+              value: "34.138.156.59,localhost,127.0.0.1,*"
