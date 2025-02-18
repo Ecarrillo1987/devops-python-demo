@@ -74,9 +74,13 @@ jobs:
       
       - name: 🛠️ Instalar Plugin de Autenticación GKE
         run: |
-            curl -O https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk.tar.gz
-            tar -xf google-cloud-sdk.tar.gz
+            echo "📥 Descargando Google Cloud SDK..."
+            curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-451.0.0-linux-x86_64.tar.gz
+            tar -xzf google-cloud-sdk-451.0.0-linux-x86_64.tar.gz
             ./google-cloud-sdk/install.sh -q
+            echo "✅ Google Cloud SDK instalado correctamente."
+
+            echo "📦 Instalando Plugin de Autenticación GKE..."
             ./google-cloud-sdk/bin/gcloud components install gke-gcloud-auth-plugin -q
             echo "export PATH=$(pwd)/google-cloud-sdk/bin:$PATH" >> $HOME/.bashrc
             echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $HOME/.bashrc
