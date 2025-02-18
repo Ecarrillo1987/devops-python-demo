@@ -64,9 +64,17 @@ jobs:
     steps:
       - name: 📥 Checkout del código
         uses: actions/checkout@v2
-
+      
+      - name: 🔐 Autenticarse en Google Cloud
+        run: |
+          echo "${{ secrets.GCLOUD_SERVICE_KEY }}" | base64 --decode > gcloud-key.json
+          gcloud auth activate-service-account --key-file=gcloud-key.json
+          gcloud config set project balmy-apogee-304919
+          gcloud container clusters get-credentials devops-cluster --region=us-east1
+        
       - name: 🔧 Configurar `kubectl`
         run: |
+         mkdir -p $HOME/.kube
          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config 
          export KUBECONFIG=$HOME/.kube/config
          kubectl config get-contexts
