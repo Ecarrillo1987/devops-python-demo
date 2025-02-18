@@ -71,12 +71,18 @@ jobs:
           gcloud auth activate-service-account --key-file=gcloud-key.json
           gcloud config set project balmy-apogee-304919
           gcloud container clusters get-credentials devops-cluster --region=us-east1
-        
+      
+      - name: 🛠️ Instalar Plugin de Autenticación GKE
+        run: |
+            gcloud components install gke-gcloud-auth-plugin
+            export USE_GKE_GCLOUD_AUTH_PLUGIN=True    
+
       - name: 🔧 Configurar `kubectl`
         run: |
          mkdir -p $HOME/.kube
          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config 
          export KUBECONFIG=$HOME/.kube/config
+         kubectl config current-context
          kubectl config get-contexts
 
       - name: 🚀 Desplegar en Kubernetes
@@ -84,4 +90,5 @@ jobs:
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
           kubectl get pods
+          kubectl get services
 
