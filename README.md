@@ -1,139 +1,85 @@
-# Demo Devops Python
+# DevOps Demo - Python API
 
-This is a simple application to be used in the technical test of DevOps.
+## 📌 Descripción
 
-## Getting Started
+Este proyecto es una API desarrollada en Django y desplegada en un clúster de Kubernetes utilizando GitHub Actions para CI/CD. La aplicación maneja usuarios y permite operaciones CRUD a través de una API REST.
 
-### Prerequisites
+## 🚀 Arquitectura del Proyecto
 
-- Python 3.11.3
+El proyecto sigue una estructura modular con los siguientes componentes:
 
-### Installation
+- **Django API**: Aplicación principal escrita en Django con DRF.
+- **Docker**: Contenedoriza la aplicación para facilitar despliegues.
+- **Kubernetes (GKE)**: Orquestación y gestión de la API en Google Kubernetes Engine.
+- **GitHub Actions**: Pipeline de CI/CD para construcción, pruebas y despliegue automático.
 
-Clone this repo.
+## 📜 Diagrama de Arquitectura
 
-```bash
-git clone https://bitbucket.org/devsu/demo-devops-python.git
-```
+```mermaid
+graph TD;
+    Dev[Desarrollador] -->|Push a GitHub| GitHubActions[GitHub Actions]
+    GitHubActions -->|Build & Push Docker Image| DockerHub
+    DockerHub -->|Pull Image| Kubernetes[GKE Cluster]
+    Kubernetes -->|Expose API| LoadBalancer
+    LoadBalancer -->|Requests| API[Django REST API]
+Configuración del Entorno
+📌 Requisitos Previos
 
-Install dependencies.
+    Docker
+    Kubernetes (kubectl y minikube o GKE)
+    Python 3.11+
+    Google Cloud SDK configurado con permisos necesarios
 
-```bash
-pip install -r requirements.txt
-```
+🛠 Instalación y Configuración
 
-Migrate database
+Clonar el repositorio:
+git clone https://github.com/tu-usuario/devops-python-demo.git
+cd devops-python-demo
 
-```bash
-py manage.py makemigrations
-py manage.py migrate
-```
+Crear un archivo .env basado en el siguiente ejemplo:
+DJANGO_SECRET_KEY='django-insecure-wc2i2*6^17$9!u+(u66@q_rg)++n1x-^(0-$3yz2f(n=_-o*7='
+DATABASE_NAME=db.sqlite3
+ALLOWED_HOSTS=34.138.156.59,localhost,127.0.0.1
 
-### Database
+Construir la imagen localmente:
+docker build -t devops-demo:v1 .
 
-The database is generated as a file in the main path when the project is first run, and its name is `db.sqlite3`.
+Despliegue en Kubernetes
 
-Consider giving access permissions to the file for proper functioning.
+    Aplicar ConfigMap y Secret:
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/secret.yaml
 
-## Usage
+    Desplegar la API:
 
-To run tests you can use this command.
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
 
-```bash
-py manage.py test
-```
+    Obtener la URL del servicio:
 
-To run locally the project you can use this command.
+kubectl get svc devops-service
 
-```bash
-py manage.py runserver
-```
+✅ Pruebas y Validación
 
-Open http://localhost:8000/api/ with your browser to see the result.
+Puedes probar la API en la siguiente URL pública:
 
-### Features
+http://34.138.156.59/api/
 
-These services can perform,
+Para listar los usuarios:
 
-#### Create User
+curl http://34.138.156.59/api/users/
 
-To create a user, the endpoint **/api/users/** must be consumed with the following parameters:
+Para crear un usuario:
 
-```bash
-  Method: POST
-```
+curl -X POST http://34.138.156.59/api/users/ -H "Content-Type: application/json" -d '{"name": "Test User", "dni": "123456789"}'
 
-```json
-{
-    "dni": "dni",
-    "name": "name"
-}
-```
+📌 Nota: Reemplaza 34.138.156.59 con la IP de tu servicio en Kubernetes si cambia. 🚀
 
-If the response is successful, the service will return an HTTP Status 200 and a message with the following structure:
 
-```json
-{
-    "id": 1,
-    "dni": "dni",
-    "name": "name"
-}
-```
+### 📌 Pasos siguientes:
+1. Guarda este contenido en el archivo `README.md` dentro de tu repositorio.
+2. Confirma que la URL de acceso (`http://34.138.156.59/api/`) esté funcionando.
+3. Si necesitas, sube una imagen con el diagrama generado en draw.io o Excalidraw en lugar del código Mermaid.
 
-If the response is unsuccessful, we will receive status 400 and the following message:
+¡Con esto tu documentación está completa y lista para compartir! 🚀
 
-```json
-{
-    "detail": "error"
-}
-```
-
-#### Get Users
-
-To get all users, the endpoint **/api/users** must be consumed with the following parameters:
-
-```bash
-  Method: GET
-```
-
-If the response is successful, the service will return an HTTP Status 200 and a message with the following structure:
-
-```json
-[
-    {
-        "id": 1,
-        "dni": "dni",
-        "name": "name"
-    }
-]
-```
-
-#### Get User
-
-To get an user, the endpoint **/api/users/<id>** must be consumed with the following parameters:
-
-```bash
-  Method: GET
-```
-
-If the response is successful, the service will return an HTTP Status 200 and a message with the following structure:
-
-```json
-{
-    "id": 1,
-    "dni": "dni",
-    "name": "name"
-}
-```
-
-If the user id does not exist, we will receive status 404 and the following message:
-
-```json
-{
-    "detail": "Not found."
-}
-```
-
-## License
-
-Copyright © 2023 Devsu. All rights reserved.
