@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Aplicaciones locales
-    'api.apps.ApiConfig',  # <- Asegúrate de llamar a la configuración correcta
+    'api.apps.ApiConfig',  
 ]
 
 MIDDLEWARE = [
